@@ -1,0 +1,2 @@
+#!/usr/bin/env sh
+pnpm --dir be lint && pnpm --dir be test && pnpm --dir be build && pnpm --dir fe-admin lint && pnpm --dir fe-admin build && pnpm --dir fe-citizen lint && pnpm --dir fe-citizen build

@@ -1,0 +1,31 @@
+{
+  "name": "municipal-tax-portal",
+  "private": true,
+  "scripts": {
+    "prepare": "husky"
+  },
+  "lint-staged": {
+    "be/**/*.{ts,tsx,js,jsx,mjs,cjs}": [
+      "pnpm --dir be exec eslint --fix",
+      "prettier --write"
+    ],
+    "fe-admin/**/*.{ts,tsx,js,jsx,mjs,cjs}": [
+      "pnpm --dir fe-admin exec eslint --fix",
+      "prettier --write"
+    ],
+    "fe-citizen/**/*.{ts,tsx,js,jsx,mjs,cjs}": [
+      "pnpm --dir fe-citizen exec eslint --fix",
+      "prettier --write"
+    ],
+    "**/*.{json,md,yml,yaml}": [
+      "prettier --write"
+    ]
+  },
+  "devDependencies": {
+    "@commitlint/cli": "^21.2.1",
+    "@commitlint/config-conventional": "^21.2.0",
+    "husky": "^9.1.7",
+    "lint-staged": "^17.0.8",
+    "prettier": "^3.9.5"
+  }
+}
