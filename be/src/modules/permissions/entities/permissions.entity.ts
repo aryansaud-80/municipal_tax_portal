@@ -1,19 +1,24 @@
 import { Column, Entity, OneToMany } from 'typeorm';
 import { BaseEntity } from '../../../common/entities';
 import { RolePermissionsEntity } from '../../rolePermissions/entities/rolePermissions.entity';
+import { PermissionModule } from '../enums/permission-module.enum';
+import { PermissionAction } from '../enums/permission-action.enum';
 
 @Entity({ name: 'permissions' })
 export class PermissionsEntity extends BaseEntity {
-  @Column()
-  module!: string;
+  @Column({ type: 'enum', enum: PermissionModule })
+  module!: PermissionModule;
 
-  @Column()
-  action!: string;
+  @Column({
+    type: 'enum',
+    enum: PermissionAction,
+  })
+  action!: PermissionAction;
 
-  @Column()
+  @Column({ unique: true })
   name!: string;
 
-  @Column()
+  @Column({ unique: true })
   code!: string;
 
   @Column()
