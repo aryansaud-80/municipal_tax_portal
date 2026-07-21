@@ -3,6 +3,8 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { PermissionsEntity } from '../permissions/entities/permissions.entity';
 import { RolesEntity } from '../roles/entities/roles.entity';
 import { RolePermissionsEntity } from './entities/rolePermissions.entity';
+import { RolePermissionsController } from './controllers/role-permissions.controller';
+import { RolePermissionsService } from './services/role-permissions.service';
 
 @Global()
 @Module({
@@ -13,6 +15,8 @@ import { RolePermissionsEntity } from './entities/rolePermissions.entity';
       PermissionsEntity,
     ]),
   ],
-  exports: [TypeOrmModule],
+  providers: [RolePermissionsService],
+  controllers: [RolePermissionsController],
+  exports: [RolePermissionsService, TypeOrmModule],
 })
 export class RolePermissionsModule {}

@@ -1,7 +1,7 @@
 import { Column, Entity, OneToMany } from 'typeorm';
 import { BaseEntity } from '../../../common/entities';
-import { UserRoleEntity } from '../../user-roles/entities/user-role.entity';
-import { RolePermissionsEntity } from '../../rolePermissions/entities/rolePermissions.entity';
+import type { RolePermissionsEntity } from '../../rolePermissions/entities/rolePermissions.entity';
+import type { UserRoleEntity } from '../../user-roles/entities/user-role.entity';
 
 @Entity({ name: 'roles' })
 export class RolesEntity extends BaseEntity {
@@ -20,9 +20,9 @@ export class RolesEntity extends BaseEntity {
   @Column({ name: 'is_active', type: 'boolean', default: true })
   isActive!: boolean;
 
-  @OneToMany(() => UserRoleEntity, (userRole) => userRole.role)
+  @OneToMany('UserRoleEntity', (userRole: UserRoleEntity) => userRole.role)
   userRoles!: UserRoleEntity[];
 
-  @OneToMany(() => RolePermissionsEntity, (rp) => rp.role)
+  @OneToMany('RolePermissionsEntity', (rp: RolePermissionsEntity) => rp.role)
   rolePermissions!: RolePermissionsEntity[];
 }

@@ -1,6 +1,6 @@
 import { Column, Entity, OneToMany } from 'typeorm';
 import { BaseEntity } from '../../../common/entities';
-import { RolePermissionsEntity } from '../../rolePermissions/entities/rolePermissions.entity';
+import type { RolePermissionsEntity } from '../../rolePermissions/entities/rolePermissions.entity';
 import { PermissionModule } from '../enums/permission-module.enum';
 import { PermissionAction } from '../enums/permission-action.enum';
 
@@ -24,6 +24,9 @@ export class PermissionsEntity extends BaseEntity {
   @Column()
   description!: string;
 
-  @OneToMany(() => RolePermissionsEntity, (rp) => rp.permission)
+  @OneToMany(
+    'RolePermissionsEntity',
+    (rp: RolePermissionsEntity) => rp.permission,
+  )
   rolePermissions!: RolePermissionsEntity[];
 }

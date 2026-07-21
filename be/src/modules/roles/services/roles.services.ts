@@ -1,6 +1,5 @@
 import {
   Injectable,
-  NotFoundException,
   ConflictException,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -9,6 +8,7 @@ import { RolesEntity } from '../entities/roles.entity';
 import { CreateRoleDto } from '../dto/create-role.dto';
 import { UpdateRoleDto } from '../dto/update-role.dto';
 import { QueryRoleDto } from '../dto/query-role.dto';
+import { findEntityOrFail } from '../../../common/utils/find-or-fail.util';
 
 @Injectable()
 export class RolesService {
@@ -75,16 +75,13 @@ export class RolesService {
   }
 
   async findOne(id: string): Promise<RolesEntity> {
-    const role = await this.rolesRepository.findOne({
-      where: { id },
-      relations: { userRoles: true, rolePermissions: true },
-    });
-
-    if (!role) {
-      throw new NotFoundException(`Role with ID '${id}' not found.`);
-    }
-
-    return role;
+    return findEntityOrFail(
+      this.rolesRepository,
+      { id },
+      'Role',
+      id,
+      { relations: { userRoles: true, rolePermissions: true } },
+    );
   }
 
   async update(id: string, rDto: UpdateRoleDto): Promise<RolesEntity> {
@@ -100,29 +97,23 @@ export class RolesService {
   }
 
   async findByCode(code: string): Promise<RolesEntity> {
-    const role = await this.rolesRepository.findOne({
-      where: { code },
-      relations: { userRoles: true, rolePermissions: true },
-    });
-
-    if (!role) {
-      throw new NotFoundException(`Role with code '${code}' not found.`);
-    }
-
-    return role;
+    return findEntityOrFail(
+      this.rolesRepository,
+      { code },
+      'Role',
+      code,
+      { relations: { userRoles: true, rolePermissions: true } },
+    );
   }
 
   async findByName(name: string): Promise<RolesEntity> {
-    const role = await this.rolesRepository.findOne({
-      where: { name },
-      relations: { userRoles: true, rolePermissions: true },
-    });
-
-    if (!role) {
-      throw new NotFoundException(`Role with name '${name}' not found.`);
-    }
-
-    return role;
+    return findEntityOrFail(
+      this.rolesRepository,
+      { name },
+      'Role',
+      name,
+      { relations: { userRoles: true, rolePermissions: true } },
+    );
   }
 
   async toggleStatus(id: string): Promise<RolesEntity> {

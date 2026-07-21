@@ -6,7 +6,7 @@ import {
   JoinColumn,
   ManyToOne,
 } from 'typeorm';
-import { UsersEntity } from '../../users/entities/users.entity';
+import type { UsersEntity } from '../../users/entities/users.entity';
 
 @Entity({ name: 'refresh_tokens' })
 export class RefreshTokenEntity {
@@ -16,7 +16,7 @@ export class RefreshTokenEntity {
   @Column({ name: 'user_id', type: 'uuid' })
   userId!: string;
 
-  @ManyToOne(() => UsersEntity, (user) => user.refreshTokens, {
+  @ManyToOne('UsersEntity', (user: UsersEntity) => user.refreshTokens, {
     onDelete: 'CASCADE',
   })
   @JoinColumn({ name: 'user_id' })

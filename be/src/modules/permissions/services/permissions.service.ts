@@ -1,7 +1,6 @@
 import {
   ConflictException,
   Injectable,
-  NotFoundException,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
@@ -11,6 +10,7 @@ import { UpdatePermissionDto } from '../dto/update-permission.dto';
 import { QueryPermissionDto } from '../dto/query-permission.dto';
 import { PermissionModule } from '../enums/permission-module.enum';
 import { SortOrder } from '../../../common/enums/sort-order.enum';
+import { findEntityOrFail } from '../../../common/utils/find-or-fail.util';
 
 @Injectable()
 export class PermissionsService {
@@ -62,16 +62,13 @@ export class PermissionsService {
   }
 
   async findOne(id: string): Promise<PermissionsEntity> {
-    const permission = await this.permissionRepository.findOne({
-      where: { id },
-      relations: { rolePermissions: true },
-    });
-
-    if (!permission) {
-      throw new NotFoundException(`Permission with id '${id}' not found.`);
-    }
-
-    return permission;
+    return findEntityOrFail(
+      this.permissionRepository,
+      { id },
+      'Permission',
+      id,
+      { relations: { rolePermissions: true } },
+    );
   }
 
   async update(
@@ -94,15 +91,12 @@ export class PermissionsService {
   }
 
   async findByCode(code: string): Promise<PermissionsEntity> {
-    const permission = await this.permissionRepository.findOne({
-      where: { code },
-    });
-
-    if (!permission) {
-      throw new NotFoundException(`Permission with code '${code}' not found.`);
-    }
-
-    return permission;
+    return findEntityOrFail(
+      this.permissionRepository,
+      { code },
+      'Permission',
+      code,
+    );
   }
 
   async findByModule(module: PermissionModule): Promise<PermissionsEntity[]> {

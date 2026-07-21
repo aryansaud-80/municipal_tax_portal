@@ -1,6 +1,6 @@
-import { PermissionsEntity } from '../../permissions/entities/permissions.entity';
-import { RolesEntity } from '../../roles/entities/roles.entity';
-import { UsersEntity } from '../../users/entities/users.entity';
+import type { PermissionsEntity } from '../../permissions/entities/permissions.entity';
+import type { RolesEntity } from '../../roles/entities/roles.entity';
+import type { UsersEntity } from '../../users/entities/users.entity';
 import {
   Entity,
   Column,
@@ -15,7 +15,7 @@ export class RolePermissionsEntity {
   @PrimaryColumn({ name: 'role_id', type: 'uuid' })
   roleId!: string;
 
-  @ManyToOne(() => RolesEntity, (role) => role.rolePermissions, {
+  @ManyToOne('RolesEntity', (role: RolesEntity) => role.rolePermissions, {
     onDelete: 'CASCADE',
   })
   @JoinColumn({ name: 'role_id' })
@@ -25,8 +25,8 @@ export class RolePermissionsEntity {
   permissionId!: string;
 
   @ManyToOne(
-    () => PermissionsEntity,
-    (permission) => permission.rolePermissions,
+    'PermissionsEntity',
+    (permission: PermissionsEntity) => permission.rolePermissions,
     {
       onDelete: 'CASCADE',
     },
@@ -43,7 +43,7 @@ export class RolePermissionsEntity {
   @Column({ name: 'assigned_by', type: 'uuid', nullable: true })
   assignedBy!: string | null;
 
-  @ManyToOne(() => UsersEntity, { nullable: true, onDelete: 'SET NULL' })
+  @ManyToOne('UsersEntity', { nullable: true, onDelete: 'SET NULL' })
   @JoinColumn({ name: 'assigned_by' })
   assignedByUser?: UsersEntity;
 }

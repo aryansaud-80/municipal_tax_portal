@@ -1,7 +1,7 @@
 import { Column, Entity, JoinColumn, ManyToOne, OneToMany } from 'typeorm';
 import { BaseEntity } from '../../../common/entities';
-import { RefreshTokenEntity } from '../../auth/entities/refreshToken.entity';
-import { UserRoleEntity } from '../../user-roles/entities/user-role.entity';
+import type { RefreshTokenEntity } from '../../auth/entities/refreshToken.entity';
+import type { UserRoleEntity } from '../../user-roles/entities/user-role.entity';
 import { UserStatusEnum } from '../enums/user-status.enum';
 
 @Entity({ name: 'users' })
@@ -9,14 +9,14 @@ export class UsersEntity extends BaseEntity {
   @Column({ name: 'owner_id', type: 'uuid', nullable: true })
   ownerId!: string;
 
-  @ManyToOne(() => UsersEntity, (user) => user.ownedUsers, {
+  @ManyToOne('UsersEntity', (user: UsersEntity) => user.ownedUsers, {
     nullable: true,
     onDelete: 'SET NULL',
   })
   @JoinColumn({ name: 'owner_id' })
   owner?: UsersEntity;
 
-  @OneToMany(() => UsersEntity, (user) => user.owner)
+  @OneToMany('UsersEntity', (user: UsersEntity) => user.owner)
   ownedUsers!: UsersEntity[];
 
   @Column({ name: 'first_name', type: 'varchar', length: 255 })
@@ -25,11 +25,14 @@ export class UsersEntity extends BaseEntity {
   @Column({ name: 'last_name', type: 'varchar', length: 255 })
   lastName!: string;
 
+  @Column({ name: 'username', type: 'varchar', length: 255, unique: true })
+  username!: string;
+
   @Column({ name: 'email', type: 'varchar', length: 255, unique: true })
   email!: string;
 
-  @Column({ name: 'phone', type: 'varchar', length: 15, unique: true })
-  phone!: string;
+  @Column({ name: 'phone_number', type: 'varchar', length: 15, unique: true })
+  phoneNumber!: string;
 
   @Column({ name: 'password_hash', type: 'varchar', length: 255 })
   passwordHash!: string;
@@ -60,9 +63,15 @@ export class UsersEntity extends BaseEntity {
   @Column({ name: 'locked_until', type: 'timestamptz', nullable: true })
   lockedUntil!: Date | null;
 
-  @OneToMany(() => UserRoleEntity, (userRole) => userRole.user)
+  @Column({ name: 'is_system', type: 'boolean', default: false })
+  isSystem!: boolean;
+
+  @OneToMany('UserRoleEntity', (userRole: UserRoleEntity) => userRole.user)
   userRoles!: UserRoleEntity[];
 
-  @OneToMany(() => RefreshTokenEntity, (refreshToken) => refreshToken.user)
+  @OneToMany(
+    'RefreshTokenEntity',
+    (refreshToken: RefreshTokenEntity) => refreshToken.user,
+  )
   refreshTokens!: RefreshTokenEntity[];
 }
