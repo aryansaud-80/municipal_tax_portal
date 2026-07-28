@@ -5,10 +5,10 @@ import type { UserRoleEntity } from '../../user-roles/entities/user-role.entity'
 
 @Entity({ name: 'roles' })
 export class RolesEntity extends BaseEntity {
-  @Column()
+  @Column({ unique: true })
   name!: string;
 
-  @Column()
+  @Column({ unique: true })
   code!: string;
 
   @Column()
