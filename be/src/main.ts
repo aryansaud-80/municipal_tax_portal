@@ -22,14 +22,14 @@ async function bootstrap() {
   });
 
   app.setGlobalPrefix('api');
-  await app.listen(process.env.PORT ?? 3000);
+  await app.listen(process.env.PORT ?? 8000);
 
   logger.log(`
 ──────────────────────────────────────────
 Municipal Tax Portal API
 Environment : development
-Port        : 3000
-URL         : http://localhost:3000
+Port        : 8000
+URL         : http://localhost:8000
 API Prefix  : /api
 ──────────────────────────────────────────
 Application started successfully.`);
