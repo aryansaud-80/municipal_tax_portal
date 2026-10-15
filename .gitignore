@@ -19,3 +19,11 @@ logs/
 # misc
 .DS_Store
 Thumbs.db
+.neon
+
+# agent / local tooling (never commit)
+.agents/
+skills-lock.json
+.kilo/
+.husky/
+.playwright-mcp/

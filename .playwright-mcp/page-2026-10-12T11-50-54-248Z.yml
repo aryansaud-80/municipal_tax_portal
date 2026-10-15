@@ -1,4 +1,0 @@
-- generic [active] [ref=f1e1]:
-  - main [ref=f1e220]
-  - button "Open Next.js Dev Tools" [ref=f1e215] [cursor=pointer]
-  - alert [ref=f1e219]: Sign In — Municipal Tax Portal

@@ -69,20 +69,35 @@ import { EmployeeProfilesModule } from './modules/employee-profiles';
     TypeOrmModule.forRootAsync({
       imports: [ConfigModule],
       inject: [ConfigService],
-      useFactory: (config: ConfigService) => ({
-        type: 'postgres',
-        host: config.get<string>('DB_HOST'),
-        port: config.get<number>('DB_PORT', 5432),
-        username: config.get<string>('DB_USERNAME'),
-        password: config.get<string>('DB_PASSWORD'),
-        database: config.get<string>('DB_NAME'),
-        synchronize: false,
-        logging: config.get<boolean>('DB_LOGGING', false),
+      useFactory: (config: ConfigService) => {
+        // Neon: pooled DATABASE_URL for app traffic (PgBouncer), direct only for migrations.
+        // Keeps localhost DB_HOST* path working when DATABASE_URL is unset.
+        // stripQuotes: `neon deploy` writes quoted values; a verbatim copy must not break pg.
+        const rawAppDbUrl = config.get<string>('DATABASE_URL');
+        const appDbUrl = rawAppDbUrl?.trim().replace(/^["']|["']$/g, '');
+        return {
+          type: 'postgres',
+          ...(appDbUrl
+            ? {
+                url: appDbUrl,
+                // Neon requires SSL; `pg` (node-postgres) driver, correct for long-running NestJS.
+                ssl: { rejectUnauthorized: false },
+              }
+            : {
+                host: config.get<string>('DB_HOST'),
+                port: config.get<number>('DB_PORT', 5432),
+                username: config.get<string>('DB_USERNAME'),
+                password: config.get<string>('DB_PASSWORD'),
+                database: config.get<string>('DB_NAME'),
+              }),
+          synchronize: false,
+          logging: config.get<boolean>('DB_LOGGING', false),
 
-        autoLoadEntities: true,
+          autoLoadEntities: true,
 
-        migrations: [join(__dirname, 'database', 'migrations', '*.{ts,js}')],
-      }),
+          migrations: [join(__dirname, 'database', 'migrations', '*.{ts,js}')],
+        };
+      },
     }),
   ],
   providers: [
