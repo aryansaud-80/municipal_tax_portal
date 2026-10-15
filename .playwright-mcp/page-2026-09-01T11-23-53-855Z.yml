@@ -1,0 +1,31 @@
+- generic [active] [ref=f20e1]:
+  - generic [ref=f20e2]:
+    - complementary [ref=f20e3]:
+      - generic [ref=f20e4]:
+        - generic [ref=f20e9]:
+          - paragraph [ref=f20e10]: Municipal Tax
+          - paragraph [ref=f20e11]: Citizen Portal
+        - navigation [ref=f20e12]:
+          - button "Dashboard" [ref=f20e13]
+          - button "My Properties" [ref=f20e20]
+          - button "Taxes & Dues" [ref=f20e26]
+          - button "Payments" [ref=f20e30]
+          - button "Receipts" [ref=f20e35]
+          - button "Notifications" [ref=f20e40]
+          - button "Profile" [ref=f20e45]
+        - button "Log out" [ref=f20e51]
+    - generic [ref=f20e56]:
+      - banner [ref=f20e57]:
+        - button "Notifications" [ref=f20e58]
+        - generic [ref=f20e62]:
+          - generic [ref=f20e63]:
+            - paragraph [ref=f20e64]: Citizen
+            - paragraph
+          - button "Profile" [ref=f20e65]: C
+      - main [ref=f20e66]:
+        - generic [ref=f20e67]:
+          - generic [ref=f20e69]:
+            - heading "Receipts" [level=1] [ref=f20e70]
+            - paragraph [ref=f20e71]: Official receipts for your confirmed tax payments.
+          - paragraph [ref=f20e74]: Loading receipts...
+  - button "Open Next.js Dev Tools" [ref=f20e80] [cursor=pointer]

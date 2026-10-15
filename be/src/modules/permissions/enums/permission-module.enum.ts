@@ -13,7 +13,14 @@ export enum PermissionModule {
   HOUSE_RENT_TAX = 'houseRentTax',
   BUSINESS_TAX = 'businessTax',
   LAND_TAX = 'landTax',
+  ADVERTISEMENT_TAX = 'advertisementTax',
   VEHICLE_TAX = 'vehicleTax',
+
+  TAX_RULE = 'taxRule',
+  BILL = 'bill',
+  FINE = 'fine',
+  FISCAL_PERIOD = 'fiscalPeriod',
+  PROPERTY_APPLICATION = 'propertyApplication',
 
   PAYMENT = 'payment',
   RECEIPT = 'receipt',

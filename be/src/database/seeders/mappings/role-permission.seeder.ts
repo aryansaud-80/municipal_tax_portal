@@ -39,7 +39,11 @@ export class RolePermissionSeeder implements Seeder {
         superAdminRole.id,
         permission.id,
       );
-      wasNew ? assigned++ : skipped++;
+      if (wasNew) {
+        assigned++;
+      } else {
+        skipped++;
+      }
     }
 
     for (const [roleCode, permissionCodes] of Object.entries(
@@ -69,7 +73,11 @@ export class RolePermissionSeeder implements Seeder {
           role.id,
           permission.id,
         );
-        wasNew ? assigned++ : skipped++;
+        if (wasNew) {
+          assigned++;
+        } else {
+          skipped++;
+        }
       }
     }
 

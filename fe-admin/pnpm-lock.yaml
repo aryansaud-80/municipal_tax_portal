@@ -29,6 +29,9 @@ importers:
       lucide-react:
         specifier: ^1.28.0
         version: 1.28.0(react@19.2.4)
+      nepali-date-converter:
+        specifier: ^3.4.0
+        version: 3.4.0
       next:
         specifier: 16.2.10
         version: 16.2.10(@babel/core@7.29.7)(react-dom@19.2.4(react@19.2.4))(react@19.2.4)
@@ -1572,6 +1575,7 @@ packages:
   eslint@9.39.5:
     resolution: {integrity: sha512-DgZS62aPLXKlnxILS/AYCoRvHaZeXceIzlXPkkGGzJWSow1aEk0lbTlxUSlyjC8jcaKxAdOnTDz+o1JFSBsyjw==}
     engines: {node: ^18.18.0 || ^20.9.0 || >=21.1.0}
+    deprecated: This version is no longer supported. Please see https://eslint.org/version-support for other options.
     hasBin: true
     peerDependencies:
       jiti: '*'
@@ -2348,6 +2352,10 @@ packages:
   negotiator@1.0.0:
     resolution: {integrity: sha512-8Ofs/AUQh8MaEcrlq5xOX0CQ9ypTF5dl78mjlMNfOK08fzpgTHQRQPBxcPlEtIw0yRpws+Zo/3r+5WRby7u3Gg==}
     engines: {node: '>= 0.6'}
+
+  nepali-date-converter@3.4.0:
+    resolution: {integrity: sha512-hBojNXCQN69I533CnxNubl72uNx2Zcow9t2bOML3CxXv227s7NKA2kStUGO5xysg0SwsubTTxAO6tcg9IhS61w==}
+    engines: {node: '>=6.0.0'}
 
   next@16.2.10:
     resolution: {integrity: sha512-2som5AVXb3kE6Yjine3/mNbBayYF58eguBWIVVUdr1y/L426xyVEgYxgBG+1QC34P2x5E+tcDup6XkuOAX3dCA==}
@@ -5326,6 +5334,8 @@ snapshots:
   natural-compare@1.4.0: {}
 
   negotiator@1.0.0: {}
+
+  nepali-date-converter@3.4.0: {}
 
   next@16.2.10(@babel/core@7.29.7)(react-dom@19.2.4(react@19.2.4))(react@19.2.4):
     dependencies:

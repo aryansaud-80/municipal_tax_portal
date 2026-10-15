@@ -54,7 +54,10 @@ export class SuperAdminSeeder implements Seeder {
       return;
     }
 
-    const saltRounds = this.configService.get<number>('app.bcryptSaltRounds', 10);
+    const saltRounds = this.configService.get<number>(
+      'app.bcryptSaltRounds',
+      10,
+    );
     const passwordHash = await bcrypt.hash(password, saltRounds);
 
     await repository.save(
@@ -79,7 +82,9 @@ export class SuperAdminSeeder implements Seeder {
     const value = this.configService.get<string>(key);
 
     if (!value) {
-      throw new Error(`Missing required env var: ${key}. Cannot seed Super Admin.`);
+      throw new Error(
+        `Missing required env var: ${key}. Cannot seed Super Admin.`,
+      );
     }
 
     return value;

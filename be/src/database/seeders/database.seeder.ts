@@ -5,6 +5,8 @@ import { RoleSeeder } from './roles/role.seeder';
 import { SuperAdminSeeder } from './users/super-admin.seeder';
 import { RolePermissionSeeder } from './mappings/role-permission.seeder';
 import { UserRoleSeeder } from './mappings/user-role.seeder';
+import { BusinessDemoSeeder } from './business-demo.seeder';
+import { DemoTaxRuleSeeder } from './demo-tax-rule.seeder';
 
 @Injectable()
 export class DatabaseSeeder {
@@ -17,6 +19,8 @@ export class DatabaseSeeder {
     private readonly superAdminSeeder: SuperAdminSeeder,
     private readonly rolePermissionSeeder: RolePermissionSeeder,
     private readonly userRoleSeeder: UserRoleSeeder,
+    private readonly businessDemoSeeder: BusinessDemoSeeder,
+    private readonly demoTaxRuleSeeder: DemoTaxRuleSeeder,
   ) {}
 
   async run(): Promise<void> {
@@ -32,6 +36,8 @@ export class DatabaseSeeder {
       await this.superAdminSeeder.run(queryRunner.manager);
       await this.rolePermissionSeeder.run(queryRunner.manager);
       await this.userRoleSeeder.run(queryRunner.manager);
+      await this.businessDemoSeeder.run(queryRunner.manager);
+      await this.demoTaxRuleSeeder.run(queryRunner.manager);
 
       await queryRunner.commitTransaction();
       this.logger.log('Database seed completed successfully.');

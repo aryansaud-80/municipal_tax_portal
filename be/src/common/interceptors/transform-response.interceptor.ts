@@ -24,7 +24,7 @@ export class TransformResponseInterceptor<T> implements NestInterceptor<
     next: CallHandler,
   ): Observable<StandardResponse<T>> {
     return next.handle().pipe(
-      map((data) => ({
+      map((data: T) => ({
         success: true,
         message: 'Request successful',
         data,

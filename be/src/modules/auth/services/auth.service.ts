@@ -2,6 +2,7 @@ import {
   Injectable,
   UnauthorizedException,
   ForbiddenException,
+  ConflictException,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { EntityManager, Repository } from 'typeorm';
@@ -17,6 +18,9 @@ import { UserStatusEnum } from '../../users/enums/user-status.enum';
 import { RefreshTokenEntity } from '../entities/refreshToken.entity';
 import { LoginDto } from '../dto/login.dto';
 import { ChangePasswordDto } from '../dto/change-password.dto';
+import { RegisterDto } from '../dto/register.dto';
+import { RolesEntity } from '../../roles/entities/roles.entity';
+import { UserRoleEntity } from '../../user-roles/entities/user-role.entity';
 
 interface RequestMeta {
   deviceName?: string;
@@ -31,6 +35,10 @@ export class AuthService {
     private readonly usersRepository: Repository<UsersEntity>,
     @InjectRepository(RefreshTokenEntity)
     private readonly refreshTokensRepository: Repository<RefreshTokenEntity>,
+    @InjectRepository(RolesEntity)
+    private readonly rolesRepository: Repository<RolesEntity>,
+    @InjectRepository(UserRoleEntity)
+    private readonly userRolesRepository: Repository<UserRoleEntity>,
     private readonly permissionsChecker: PermissionsCheckerService,
     private readonly jwtService: JwtService,
     private readonly configService: ConfigService,
@@ -50,10 +58,30 @@ export class AuthService {
       throw new UnauthorizedException('Account is not active');
     }
 
+    if (user.lockedUntil && user.lockedUntil > new Date()) {
+      throw new UnauthorizedException(
+        'Account is temporarily locked due to repeated failed logins. Please try again later.',
+      );
+    }
+
     const passwordMatches = await bcrypt.compare(password, user.passwordHash);
 
     if (!passwordMatches) {
+      const attempts = (user.failedLoginAttempts ?? 0) + 1;
+      const updates: Partial<UsersEntity> = { failedLoginAttempts: attempts };
+      if (attempts >= 5) {
+        updates.lockedUntil = new Date(Date.now() + 15 * 60 * 1000);
+        updates.failedLoginAttempts = 0;
+      }
+      await this.usersRepository.update(user.id, updates);
       throw new UnauthorizedException('Invalid email or password');
+    }
+
+    if (user.failedLoginAttempts !== 0 || user.lockedUntil) {
+      await this.usersRepository.update(user.id, {
+        failedLoginAttempts: 0,
+        lockedUntil: null,
+      });
     }
 
     return this.toAuthenticatedUser(user);
@@ -79,6 +107,61 @@ export class AuthService {
       roles,
       permissions,
     };
+  }
+
+  async register(dto: RegisterDto, meta?: RequestMeta) {
+    const [byEmail, byUsername, byPhone] = await Promise.all([
+      this.usersRepository.findOne({
+        where: { email: dto.email },
+        withDeleted: true,
+      }),
+      this.usersRepository.findOne({
+        where: { username: dto.username },
+        withDeleted: true,
+      }),
+      this.usersRepository.findOne({
+        where: { phoneNumber: dto.phoneNumber },
+        withDeleted: true,
+      }),
+    ]);
+    if (byEmail) throw new ConflictException('Email is already in use');
+    if (byUsername) throw new ConflictException('Username is already in use');
+    if (byPhone) throw new ConflictException('Phone number is already in use');
+
+    const passwordHash = await this.hashValue(dto.password);
+    const user = await this.usersRepository.save(
+      this.usersRepository.create({
+        firstName: dto.firstName,
+        lastName: dto.lastName,
+        username: dto.username,
+        email: dto.email,
+        phoneNumber: dto.phoneNumber,
+        passwordHash,
+        status: UserStatusEnum.ACTIVE,
+      }),
+    );
+
+    // Self-registration may only ever grant the CITIZEN role — the caller
+    // cannot request any other role. The role is resolved server-side.
+    const citizenRole = await this.rolesRepository.findOne({
+      where: { code: 'CITIZEN' },
+    });
+    if (citizenRole) {
+      const exists = await this.userRolesRepository.findOne({
+        where: { userId: user.id, roleId: citizenRole.id },
+      });
+      if (!exists) {
+        await this.userRolesRepository.save(
+          this.userRolesRepository.create({
+            userId: user.id,
+            roleId: citizenRole.id,
+            assignedAt: new Date(),
+          }),
+        );
+      }
+    }
+
+    return this.login({ email: dto.email, password: dto.password }, meta);
   }
 
   async refresh(payload: JwtPayload, rawToken: string) {
@@ -141,6 +224,27 @@ export class AuthService {
     await this.refreshTokensRepository.delete({ id: payload.jti });
   }
 
+  async getProfile(userId: string) {
+    const user = await this.usersRepository.findOne({
+      where: { id: userId },
+    });
+
+    if (!user) {
+      throw new UnauthorizedException('User no longer exists');
+    }
+
+    const [roles, permissions] = await Promise.all([
+      this.permissionsChecker.getUserRoleNames(user.id),
+      this.permissionsChecker.getUserPermissionCodes(user.id),
+    ]);
+
+    return {
+      ...this.toAuthenticatedUser(user),
+      roles,
+      permissions,
+    };
+  }
+
   async changePassword(userId: string, dto: ChangePasswordDto): Promise<void> {
     const user = await this.usersRepository.findOne({
       where: { id: userId },
@@ -168,8 +272,11 @@ export class AuthService {
     return {
       id: user.id,
       email: user.email,
+      username: user.username,
       firstName: user.firstName,
       lastName: user.lastName,
+      phoneNumber: user.phoneNumber ?? undefined,
+      status: user.status,
     };
   }
 

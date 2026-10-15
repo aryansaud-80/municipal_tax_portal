@@ -20,6 +20,7 @@ import { ToggleUserStatusDto } from '../dto/toggle-user-status.dto';
 import { JwtAuthGuard } from '../../auth/guards/jwt-auth.guard';
 import { PermissionsGuard } from '../../../common/guards/permissions.guard';
 import { Permissions } from '../../../common/decorators/permissions.decorator';
+import { CurrentUser } from '../../auth/decorators/current-user.decorator';
 
 @Controller('users')
 @UseGuards(JwtAuthGuard, PermissionsGuard)
@@ -29,8 +30,12 @@ export class UsersController {
   @Post()
   @Permissions('user.create')
   @HttpCode(HttpStatus.CREATED)
-  async create(@Body() dto: CreateUserDto) {
-    return this.usersService.create(dto);
+  async create(
+    @Body() dto: CreateUserDto,
+    @CurrentUser('id') actorId: string,
+    @CurrentUser('roles') roles: string[],
+  ) {
+    return this.usersService.create(dto, { id: actorId, roles: roles ?? [] });
   }
 
   @Get()
@@ -70,7 +75,12 @@ export class UsersController {
   async toggleStatus(
     @Param('id', ParseUUIDPipe) id: string,
     @Body() dto: ToggleUserStatusDto,
+    @CurrentUser('id') actorId: string,
+    @CurrentUser('roles') roles: string[],
   ) {
-    return this.usersService.toggleStatus(id, dto.isActive);
+    return this.usersService.toggleStatus(id, dto.isActive, {
+      id: actorId,
+      roles: roles ?? [],
+    });
   }
 }

@@ -13,6 +13,6 @@ import { UserRolesService } from './services/user-roles.service';
   ],
   providers: [UserRolesService],
   controllers: [UserRolesController],
-  exports: [UserRolesService,  TypeOrmModule],
+  exports: [UserRolesService, TypeOrmModule],
 })
 export class UserRolesModule {}

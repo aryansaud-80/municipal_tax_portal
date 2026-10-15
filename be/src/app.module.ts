@@ -20,6 +20,21 @@ import { RolePermissionsModule } from './modules/rolePermissions';
 import { RolesModule } from './modules/roles';
 import { UserRolesModule } from './modules/user-roles';
 import { UsersModule } from './modules/users';
+import { PropertiesModule } from './modules/properties';
+import { TaxCategoriesModule } from './modules/tax-categories';
+import { TaxAssessmentsModule } from './modules/tax-assessments';
+import { PaymentsModule } from './modules/payments';
+import { ReceiptsModule } from './modules/receipts';
+import { NotificationsModule } from './modules/notifications';
+import { DashboardModule } from './modules/dashboard';
+import { AuditModule } from './modules/audit';
+import { FiscalPeriodsModule } from './modules/fiscal-periods';
+import { TaxRulesModule } from './modules/tax-rules';
+import { PropertyApplicationsModule } from './modules/property-applications';
+import { BillsModule } from './modules/bills';
+import { FinesModule } from './modules/fines';
+import { ReportsModule } from './modules/reports';
+import { EmployeeProfilesModule } from './modules/employee-profiles';
 
 @Module({
   imports: [
@@ -36,6 +51,21 @@ import { UsersModule } from './modules/users';
     RolePermissionsModule,
     AuthModule,
     HealthModule,
+    PropertiesModule,
+    TaxCategoriesModule,
+    TaxAssessmentsModule,
+    PaymentsModule,
+    ReceiptsModule,
+    NotificationsModule,
+    DashboardModule,
+    AuditModule,
+    FiscalPeriodsModule,
+    TaxRulesModule,
+    PropertyApplicationsModule,
+    BillsModule,
+    FinesModule,
+    ReportsModule,
+    EmployeeProfilesModule,
     TypeOrmModule.forRootAsync({
       imports: [ConfigModule],
       inject: [ConfigService],

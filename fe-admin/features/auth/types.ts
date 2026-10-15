@@ -9,6 +9,8 @@ export interface AuthenticatedUserDto {
   email: string;
   firstName: string;
   lastName: string;
+  roles?: string[];
+  permissions?: string[];
 }
 
 export interface LoginResponse {

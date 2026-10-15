@@ -1,10 +1,16 @@
 "use client";
 
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
 import { AxiosError } from "axios";
-import { loginRequest } from "./api";
-import { LoginRequest, LoginResponse, ApiErrorResponse } from "./types";
+import { changePasswordRequest, loginRequest, logoutRequest, meRequest } from "./api";
+import {
+  LoginRequest,
+  LoginResponse,
+  ApiErrorResponse,
+} from "./types";
+
+export const meKey = ["auth", "me"] as const;
 
 export function useLogin() {
   const router = useRouter();
@@ -18,6 +24,47 @@ export function useLogin() {
       },
     },
   );
+}
+
+export function useLogout() {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: logoutRequest,
+    // Logout is a session boundary: the BFF has already revoked the
+    // server token and cleared cookies, so leave via a full reload to
+    // guarantee no authenticated state survives client-side.
+    onSuccess: () => {
+      queryClient.clear();
+      window.location.assign("/login");
+    },
+    onError: () => {
+      queryClient.clear();
+      window.location.assign("/login");
+    },
+  });
+}
+
+export function useMe() {
+  return useQuery({
+    queryKey: meKey,
+    queryFn: meRequest,
+    retry: false,
+  });
+}
+
+export function useChangePassword() {
+  const queryClient = useQueryClient();
+  return useMutation<
+    { message: string },
+    AxiosError<ApiErrorResponse>,
+    { currentPassword: string; newPassword: string }
+  >({
+    mutationFn: changePasswordRequest,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: meKey });
+    },
+  });
 }
 
 /**
@@ -35,3 +82,5 @@ export function getLoginErrorMessage(error: unknown): string {
 
   return "Something went wrong. Please try again.";
 }
+
+export const getAuthErrorMessage = getLoginErrorMessage;

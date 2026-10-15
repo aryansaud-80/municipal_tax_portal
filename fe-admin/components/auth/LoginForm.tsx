@@ -1,8 +1,7 @@
 "use client";
 
-import { useForm } from "react-hook-form";
+import { useForm, Resolver } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import Link from "next/link";
 import { loginSchema, LoginFormValues } from "@/features/auth/schema";
 import { useLogin, getLoginErrorMessage } from "@/features/auth/hooks";
 import { Label } from "@/components/ui/label";
@@ -20,7 +19,7 @@ export function LoginForm() {
     control,
     formState: { errors },
   } = useForm<LoginFormValues>({
-    resolver: zodResolver(loginSchema) as any,
+    resolver: zodResolver(loginSchema) as Resolver<LoginFormValues>,
     defaultValues: { email: "", password: "", rememberMe: false },
     mode: "onBlur",
   });
@@ -53,15 +52,7 @@ export function LoginForm() {
       </div>
 
       <div className="space-y-1.5">
-        <div className="flex items-center justify-between">
-          <Label htmlFor="password">Password</Label>
-          <Link
-            href="/forgot-password"
-            className="text-xs font-medium text-teal-700 hover:text-teal-800 hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-teal-600 rounded"
-          >
-            Forgot password?
-          </Link>
-        </div>
+        <Label htmlFor="password">Password</Label>
         <PasswordInput
           id="password"
           autoComplete="current-password"

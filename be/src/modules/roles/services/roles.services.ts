@@ -1,7 +1,4 @@
-import {
-  Injectable,
-  ConflictException,
-} from '@nestjs/common';
+import { Injectable, ConflictException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { RolesEntity } from '../entities/roles.entity';
@@ -75,13 +72,9 @@ export class RolesService {
   }
 
   async findOne(id: string): Promise<RolesEntity> {
-    return findEntityOrFail(
-      this.rolesRepository,
-      { id },
-      'Role',
-      id,
-      { relations: { userRoles: true, rolePermissions: true } },
-    );
+    return findEntityOrFail(this.rolesRepository, { id }, 'Role', id, {
+      relations: { userRoles: true, rolePermissions: true },
+    });
   }
 
   async update(id: string, rDto: UpdateRoleDto): Promise<RolesEntity> {
@@ -97,23 +90,15 @@ export class RolesService {
   }
 
   async findByCode(code: string): Promise<RolesEntity> {
-    return findEntityOrFail(
-      this.rolesRepository,
-      { code },
-      'Role',
-      code,
-      { relations: { userRoles: true, rolePermissions: true } },
-    );
+    return findEntityOrFail(this.rolesRepository, { code }, 'Role', code, {
+      relations: { userRoles: true, rolePermissions: true },
+    });
   }
 
   async findByName(name: string): Promise<RolesEntity> {
-    return findEntityOrFail(
-      this.rolesRepository,
-      { name },
-      'Role',
-      name,
-      { relations: { userRoles: true, rolePermissions: true } },
-    );
+    return findEntityOrFail(this.rolesRepository, { name }, 'Role', name, {
+      relations: { userRoles: true, rolePermissions: true },
+    });
   }
 
   async toggleStatus(id: string): Promise<RolesEntity> {

@@ -18,10 +18,21 @@ export class LoggerService implements NestLoggerService {
         winston.format.errors({ stack: true }),
         winston.format.printf(
           ({ timestamp, level, message, context, stack }) => {
-            const ctx = context || this.context || 'App';
-            return stack
-              ? `[${timestamp}] [${level.toUpperCase()}] [${ctx}] ${message} - ${stack}`
-              : `[${timestamp}] [${level.toUpperCase()}] [${ctx}] ${message}`;
+            const ctx =
+              typeof context === 'string' && context
+                ? context
+                : (this.context ?? 'App');
+            const date =
+              typeof timestamp === 'string' ? timestamp : String(timestamp);
+            const text = String(message);
+            const stackText =
+              typeof stack === 'string'
+                ? stack
+                : stack
+                  ? (JSON.stringify(stack) ?? '')
+                  : '';
+            const suffix = stackText ? ` - ${stackText}` : '';
+            return `[${date}] [${level.toUpperCase()}] [${ctx}] ${text}${suffix}`;
           },
         ),
       ),

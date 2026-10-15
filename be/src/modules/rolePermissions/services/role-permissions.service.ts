@@ -76,8 +76,8 @@ export class RolePermissionsService {
 
       try {
         return await rolePermissionsRepo.save(rolePermissions);
-      } catch (error: any) {
-        if (error?.code === UNIQUE_VIOLATION_CODE) {
+      } catch (error: unknown) {
+        if ((error as { code?: string }).code === UNIQUE_VIOLATION_CODE) {
           throw new ConflictException(
             'One or more permissions are already assigned to this role',
           );

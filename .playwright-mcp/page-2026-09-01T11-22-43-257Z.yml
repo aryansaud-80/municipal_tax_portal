@@ -1,0 +1,32 @@
+- generic [active] [ref=f16e1]:
+  - generic [ref=f16e2]:
+    - complementary [ref=f16e3]:
+      - generic [ref=f16e4]:
+        - generic [ref=f16e9]:
+          - paragraph [ref=f16e10]: Municipal Tax
+          - paragraph [ref=f16e11]: Admin Portal
+        - navigation [ref=f16e12]:
+          - button "Dashboard" [ref=f16e13]
+          - button "Users" [ref=f16e20]
+          - button "Properties" [ref=f16e27]
+          - button "Tax Assessments" [ref=f16e33]
+          - button "Payments" [ref=f16e37]
+          - button "Receipts" [ref=f16e42]
+          - button "Tax Categories" [ref=f16e47]
+          - button "Reports" [ref=f16e53]
+        - button "Log out" [ref=f16e58]
+    - generic [ref=f16e63]:
+      - banner [ref=f16e64]:
+        - generic [ref=f16e65]:
+          - generic [ref=f16e66]:
+            - paragraph [ref=f16e67]: Admin
+            - paragraph
+          - button "Profile" [ref=f16e68]: A
+      - main [ref=f16e69]:
+        - generic [ref=f16e70]:
+          - generic [ref=f16e72]:
+            - heading "Tax Categories" [level=1] [ref=f16e73]
+            - paragraph [ref=f16e74]: Tax types and their defined rates.
+          - paragraph [ref=f16e77]: Loading categories...
+  - button "Open Next.js Dev Tools" [ref=f16e83] [cursor=pointer]
+  - alert [ref=f16e87]

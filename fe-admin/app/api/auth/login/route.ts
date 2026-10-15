@@ -20,7 +20,7 @@ export async function POST(request: NextRequest) {
   }
 
   const { accessToken, refreshToken, expiresIn, user, roles, permissions } =
-    data;
+    data.data ?? {};
 
   const response = NextResponse.json({ user, roles, permissions, expiresIn });
 

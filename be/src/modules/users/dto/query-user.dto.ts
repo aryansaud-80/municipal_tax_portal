@@ -1,12 +1,5 @@
 import { Type } from 'class-transformer';
-import {
-  IsEnum,
-  IsInt,
-  IsOptional,
-  IsString,
-  Max,
-  Min,
-} from 'class-validator';
+import { IsEnum, IsInt, IsOptional, IsString, Max, Min } from 'class-validator';
 import { SortOrder } from '../../../common/enums/sort-order.enum';
 import { UserStatusEnum } from '../enums/user-status.enum';
 

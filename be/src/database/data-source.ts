@@ -2,7 +2,7 @@ import { DataSource, DataSourceOptions } from 'typeorm';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { join } from 'path';
 
-ConfigModule.forRoot({
+void ConfigModule.forRoot({
   isGlobal: true,
   envFilePath: '.env',
 });

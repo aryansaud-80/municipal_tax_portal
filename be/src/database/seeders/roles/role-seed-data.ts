@@ -36,4 +36,10 @@ export const ROLE_SEED_DATA: RoleSeedDefinition[] = [
     description: 'Read-only access for auditing records and reports',
     isSystem: true,
   },
+  {
+    name: 'Citizen',
+    code: 'CITIZEN',
+    description: 'Regular citizen with portal access',
+    isSystem: true,
+  },
 ];

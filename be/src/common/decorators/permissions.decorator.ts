@@ -5,7 +5,6 @@ import {
 } from '../constants/authorization.constants';
 import { PermissionMatchType } from '../types/permission-match-type.type';
 
-
 export const Permissions = (
   codes: string | string[],
   matchType: PermissionMatchType = 'ANY',

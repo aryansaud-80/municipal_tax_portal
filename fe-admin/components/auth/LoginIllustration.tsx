@@ -2,7 +2,7 @@ import { Landmark } from "lucide-react";
 
 export function LoginIllustration() {
   return (
-    <div className="relative flex h-full flex-col justify-between overflow-hidden bg-gradient-to-b from-teal-800 to-teal-900 px-12 py-14 text-white">
+    <div className="relative flex h-full flex-col justify-between overflow-hidden bg-primary px-12 py-14 text-primary-foreground">
       <div className="flex items-center gap-3">
         <div className="flex h-11 w-11 items-center justify-center rounded-lg bg-white/10 ring-1 ring-white/20">
           <Landmark className="h-6 w-6" aria-hidden="true" />
@@ -11,7 +11,7 @@ export function LoginIllustration() {
           <p className="text-base font-semibold leading-tight">
             Municipal Tax Portal
           </p>
-          <p className="text-sm text-teal-100">Admin Portal</p>
+          <p className="text-sm opacity-80">Admin Portal</p>
         </div>
       </div>
 
@@ -19,7 +19,7 @@ export function LoginIllustration() {
         {/* Simple, government-appropriate line illustration — no stock/flashy imagery */}
         <svg
           viewBox="0 0 320 220"
-          className="w-full max-w-sm text-teal-100/90"
+          className="w-full max-w-sm opacity-80"
           fill="none"
           aria-hidden="true"
         >
@@ -88,7 +88,7 @@ export function LoginIllustration() {
         <p className="text-lg font-medium leading-snug text-white">
           Transparent Revenue Management for Better Governance
         </p>
-        <p className="mt-6 text-xs text-teal-200">
+        <p className="mt-6 text-xs opacity-70">
           © {new Date().getFullYear()} Municipal Tax Portal. All rights
           reserved.
         </p>

@@ -1,5 +1,6 @@
 import {
   ConflictException,
+  ForbiddenException,
   Injectable,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -11,24 +12,42 @@ import { UpdateUserDto } from '../dto/update-user.dto';
 import { QueryUserDto } from '../dto/query-user.dto';
 import { PaginatedUsersResponseDto } from '../dto/paginated-users-response.dto';
 import { UserStatusEnum } from '../enums/user-status.enum';
+import { UserRoleEntity } from '../../user-roles/entities/user-role.entity';
+import { RolesEntity } from '../../roles/entities/roles.entity';
 import { findEntityOrFail } from '../../../common/utils/find-or-fail.util';
 
 const SALT_ROUNDS = 10;
 const USER_ALIAS = 'user';
+const STAFF_ROLE_CODES = new Set([
+  'SUPER_ADMIN',
+  'MUNICIPAL_ADMIN',
+  'REVENUE_OFFICER',
+  'CASHIER',
+  'AUDITOR',
+]);
 
 @Injectable()
 export class UsersService {
   constructor(
     @InjectRepository(UsersEntity)
     private readonly usersRepository: Repository<UsersEntity>,
+    @InjectRepository(UserRoleEntity)
+    private readonly userRoleRepository: Repository<UserRoleEntity>,
+    @InjectRepository(RolesEntity)
+    private readonly rolesRepository: Repository<RolesEntity>,
   ) {}
 
-  async create(dto: CreateUserDto): Promise<Omit<UsersEntity, 'passwordHash'>> {
+  async create(
+    dto: CreateUserDto,
+    actor?: { id: string; roles: string[] },
+  ): Promise<Omit<UsersEntity, 'passwordHash'>> {
     await this.checkUniqueFields({
       email: dto.email,
       username: dto.username,
       phoneNumber: dto.phoneNumber,
     });
+
+    this.assertRoleAssignable(dto.roleCode ?? 'CITIZEN', actor);
 
     const passwordHash = await bcrypt.hash(dto.password, SALT_ROUNDS);
 
@@ -39,11 +58,34 @@ export class UsersService {
       email: dto.email,
       passwordHash,
       phoneNumber: dto.phoneNumber,
-      status: dto.status,
+      status: dto.status ?? UserStatusEnum.ACTIVE,
     });
 
     const saved = await this.usersRepository.save(user);
+
+    await this.assignRole(saved.id, dto.roleCode ?? 'CITIZEN');
+
     return this.excludePassword(saved);
+  }
+
+  private async assignRole(userId: string, roleCode: string): Promise<void> {
+    const role = await this.rolesRepository.findOne({
+      where: { code: roleCode },
+    });
+    if (!role) return;
+
+    const exists = await this.userRoleRepository.findOne({
+      where: { userId, roleId: role.id },
+    });
+    if (exists) return;
+
+    await this.userRoleRepository.save(
+      this.userRoleRepository.create({
+        userId,
+        roleId: role.id,
+        assignedAt: new Date(),
+      }),
+    );
   }
 
   async findAll(
@@ -110,7 +152,11 @@ export class UsersService {
   async toggleStatus(
     id: string,
     isActive: boolean,
+    actor?: { id: string; roles: string[] },
   ): Promise<Omit<UsersEntity, 'passwordHash'>> {
+    if (actor && id === actor.id) {
+      throw new ForbiddenException('You cannot change your own account status');
+    }
     const user = await this.findUserOrFail(id);
     user.status = isActive ? UserStatusEnum.ACTIVE : UserStatusEnum.INACTIVE;
     const saved = await this.usersRepository.save(user);
@@ -225,7 +271,28 @@ export class UsersService {
   private excludePassword(
     user: UsersEntity,
   ): Omit<UsersEntity, 'passwordHash'> {
-    const { passwordHash, ...safeUser } = user;
+    const safeUser = { ...user };
+    delete (safeUser as { passwordHash?: string }).passwordHash;
     return safeUser;
+  }
+
+  /**
+   * Only Super Admin / Municipal Admin may create staff accounts. Anyone
+   * with user.create can create CITIZEN accounts (staff-assisted citizen
+   * registration). Self-service uses POST /auth/register instead.
+   */
+  private assertRoleAssignable(
+    roleCode: string,
+    actor?: { id: string; roles: string[] },
+  ): void {
+    if (!STAFF_ROLE_CODES.has(roleCode)) return;
+    const roles = actor?.roles ?? [];
+    const allowed =
+      roles.includes('Super Admin') || roles.includes('Municipal Admin');
+    if (!allowed) {
+      throw new ForbiddenException(
+        'Only administrators can create staff accounts',
+      );
+    }
   }
 }

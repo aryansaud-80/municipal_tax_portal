@@ -5,6 +5,7 @@ node_modules/
 dist/
 coverage/
 .next/
+tsconfig.tsbuildinfo
 
 # logs
 logs/
@@ -13,6 +14,7 @@ logs/
 # env files
 .env
 .env.*
+!.env.example
 
 # misc
 .DS_Store

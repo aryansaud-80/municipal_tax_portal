@@ -22,12 +22,7 @@ export class GlobalExceptionFilter implements ExceptionFilter {
         ? exception.getStatus()
         : HttpStatus.INTERNAL_SERVER_ERROR;
 
-    if (
-      exception &&
-      typeof exception === 'object' &&
-      'code' in exception &&
-      (exception as any).code === '23505'
-    ) {
+    if (this.isUniqueViolation(exception)) {
       status = HttpStatus.CONFLICT;
     }
 
@@ -35,10 +30,11 @@ export class GlobalExceptionFilter implements ExceptionFilter {
       exception instanceof HttpException ? exception.getResponse() : null;
 
     const message = this.extractMessage(exception, exceptionResponse);
+    const messageText = Array.isArray(message) ? message.join(', ') : message;
 
     if (status >= 500) {
       this.logger.error(
-        `${request.method} ${request.originalUrl} - ${message}`,
+        `${request.method} ${request.originalUrl} - ${messageText}`,
         exception instanceof Error ? exception.stack : undefined,
       );
     }
@@ -68,17 +64,19 @@ export class GlobalExceptionFilter implements ExceptionFilter {
       return exceptionResponse;
     }
 
-    if (
-      exception &&
-      typeof exception === 'object' &&
-      'code' in exception &&
-      (exception as any).code === '23505'
-    ) {
+    if (this.isUniqueViolation(exception)) {
       return 'Resource already exists or constraint violation occurred';
     }
 
     return exception instanceof Error
       ? exception.message
       : 'Internal server error';
+  }
+
+  private isUniqueViolation(exception: unknown): boolean {
+    if (!exception || typeof exception !== 'object' || !('code' in exception)) {
+      return false;
+    }
+    return exception.code === '23505';
   }
 }

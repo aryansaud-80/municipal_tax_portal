@@ -1,0 +1,27 @@
+- generic [active] [ref=f19e1]:
+  - button "Open Next.js Dev Tools" [ref=f19e75] [cursor=pointer]
+  - alert [ref=f19e152]
+  - generic [ref=f19e154]:
+    - generic [ref=f19e155]:
+      - heading "Welcome back" [level=1] [ref=f19e159]
+      - paragraph [ref=f19e160]: Sign in to your citizen account
+    - generic [ref=f19e161]:
+      - generic [ref=f19e162]:
+        - generic [ref=f19e163]: Sign in
+        - generic [ref=f19e164]: Enter your credentials to continue
+      - generic [ref=f19e165]:
+        - generic [ref=f19e166]:
+          - generic [ref=f19e167]:
+            - generic [ref=f19e168]: Email
+            - textbox "Email" [ref=f19e169]:
+              - /placeholder: you@example.com
+          - generic [ref=f19e170]:
+            - generic [ref=f19e171]: Password
+            - textbox "Password" [ref=f19e173]:
+              - /placeholder: ••••••••
+          - button "Sign in" [ref=f19e174]
+        - paragraph [ref=f19e175]: Use the login credentials issued to you by your municipal office.
+        - generic [ref=f19e176]:
+          - paragraph [ref=f19e177]: Demo citizen
+          - paragraph [ref=f19e178]: "Email: ram@example.com"
+          - paragraph [ref=f19e179]: "Password: Citizen123!"

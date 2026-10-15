@@ -1,12 +1,14 @@
 import { Global, Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { JwtModule } from '@nestjs/jwt';
+import type { JwtSignOptions } from '@nestjs/jwt';
 import { PassportModule } from '@nestjs/passport';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { PermissionsCheckerService } from '../../common/services/permission-checker.service';
 import { RolePermissionsEntity } from '../rolePermissions/entities/rolePermissions.entity';
 import { UserRoleEntity } from '../user-roles/entities/user-role.entity';
 import { UsersEntity } from '../users/entities/users.entity';
+import { RolesEntity } from '../roles/entities/roles.entity';
 import { RefreshTokenEntity } from './entities/refreshToken.entity';
 import { AuthController } from './controllers/auth.controller';
 import { AuthService } from './services/auth.service';
@@ -26,7 +28,7 @@ import { RefreshTokenGuard } from './guards/refresh-token.guard';
           config.get<string>('jwt.accessSecret') ?? 'default_access_secret',
         signOptions: {
           expiresIn: (config.get<string>('jwt.accessExpiresIn') ??
-            '15m') as any,
+            '15m') as JwtSignOptions['expiresIn'],
         },
       }),
     }),
@@ -34,6 +36,7 @@ import { RefreshTokenGuard } from './guards/refresh-token.guard';
       RefreshTokenEntity,
       UsersEntity,
       UserRoleEntity,
+      RolesEntity,
       RolePermissionsEntity,
     ]),
   ],

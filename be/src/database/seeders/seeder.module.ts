@@ -9,6 +9,8 @@ import { RoleSeeder } from './roles/role.seeder';
 import { SuperAdminSeeder } from './users/super-admin.seeder';
 import { RolePermissionSeeder } from './mappings/role-permission.seeder';
 import { UserRoleSeeder } from './mappings/user-role.seeder';
+import { BusinessDemoSeeder } from './business-demo.seeder';
+import { DemoTaxRuleSeeder } from './demo-tax-rule.seeder';
 import { DatabaseSeeder } from './database.seeder';
 
 @Module({
@@ -22,6 +24,8 @@ import { DatabaseSeeder } from './database.seeder';
     SuperAdminSeeder,
     RolePermissionSeeder,
     UserRoleSeeder,
+    BusinessDemoSeeder,
+    DemoTaxRuleSeeder,
     DatabaseSeeder,
   ],
 })

@@ -122,6 +122,14 @@ export const PERMISSION_SEED_DATA: PermissionSeedDefinition[] = [
     description: 'Allows approving land tax assessments',
   },
 
+  ...crud(PermissionModule.ADVERTISEMENT_TAX, 'Advertisement Tax'),
+  {
+    module: PermissionModule.ADVERTISEMENT_TAX,
+    action: PermissionAction.APPROVE,
+    name: 'Approve Advertisement Tax',
+    description: 'Allows approving advertisement tax assessments',
+  },
+
   ...crud(PermissionModule.VEHICLE_TAX, 'Vehicle Tax'),
   {
     module: PermissionModule.VEHICLE_TAX,
@@ -147,6 +155,28 @@ export const PERMISSION_SEED_DATA: PermissionSeedDefinition[] = [
     action: PermissionAction.VERIFY,
     name: 'Verify Payment',
     description: 'Allows verifying a payment',
+  },
+
+  ...crud(PermissionModule.TAX_RULE, 'Tax Rules'),
+
+  ...crud(PermissionModule.BILL, 'Bills'),
+
+  ...crud(PermissionModule.FINE, 'Fines'),
+
+  ...crud(PermissionModule.FISCAL_PERIOD, 'Fiscal Periods'),
+
+  ...crud(PermissionModule.PROPERTY_APPLICATION, 'Property Applications'),
+  {
+    module: PermissionModule.PROPERTY_APPLICATION,
+    action: PermissionAction.APPROVE,
+    name: 'Approve Property Application',
+    description: 'Allows approving property registration applications',
+  },
+  {
+    module: PermissionModule.PROPERTY_APPLICATION,
+    action: PermissionAction.REJECT,
+    name: 'Reject Property Application',
+    description: 'Allows rejecting property registration applications',
   },
 
   {

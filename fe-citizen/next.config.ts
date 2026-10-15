@@ -1,7 +1,10 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  /* config options here */
+  env: {
+    NESTJS_API_URL:
+      process.env.NESTJS_API_URL ?? "http://localhost:8000",
+  },
 };
 
 export default nextConfig;

@@ -17,7 +17,7 @@ export function RememberMe({ control }: { control: Control<LoginFormValues> }) {
             checked={field.value}
             onCheckedChange={field.onChange}
           />
-          <Label htmlFor="rememberMe" className="cursor-pointer font-normal text-slate-600">
+          <Label htmlFor="rememberMe" className="cursor-pointer font-normal text-muted-foreground">
             Remember me on this device
           </Label>
         </div>

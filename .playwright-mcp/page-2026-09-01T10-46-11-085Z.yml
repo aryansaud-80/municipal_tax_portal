@@ -1,0 +1,36 @@
+- generic [active] [ref=f1e1]:
+  - generic [ref=f1e2]:
+    - complementary [ref=f1e3]:
+      - generic [ref=f1e4]:
+        - generic [ref=f1e9]:
+          - paragraph [ref=f1e10]: Municipal Tax
+          - paragraph [ref=f1e11]: Admin Portal
+        - navigation [ref=f1e12]:
+          - button "Dashboard" [ref=f1e13]
+          - button "Users" [ref=f1e20]
+          - button "Properties" [ref=f1e27]
+          - button "Tax Assessments" [ref=f1e33]
+          - button "Payments" [ref=f1e37]
+          - button "Receipts" [ref=f1e42]
+          - button "Tax Categories" [ref=f1e47]
+          - button "Reports" [ref=f1e53]
+        - button "Log out" [ref=f1e58]
+    - generic [ref=f1e63]:
+      - banner [ref=f1e64]:
+        - generic [ref=f1e65]:
+          - generic [ref=f1e66]:
+            - paragraph [ref=f1e67]: Admin
+            - paragraph
+          - button "Profile" [ref=f1e68]: A
+      - main [ref=f1e69]:
+        - generic [ref=f1e70]:
+          - generic [ref=f1e72]:
+            - heading "Users" [level=1] [ref=f1e73]
+            - paragraph [ref=f1e74]: Manage registered municipal accounts.
+          - generic [ref=f1e75]:
+            - textbox "Search by name or email..." [ref=f1e80]
+            - button "Search" [ref=f1e81]
+            - button "Add user" [ref=f1e82]
+          - paragraph [ref=f1e85]: Loading users...
+  - button "Open Next.js Dev Tools" [ref=f1e91] [cursor=pointer]
+  - alert [ref=f1e95]

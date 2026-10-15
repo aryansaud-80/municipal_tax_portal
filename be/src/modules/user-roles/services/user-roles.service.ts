@@ -57,8 +57,8 @@ export class UserRolesService {
 
       try {
         return await userRolesRepo.save(userRole);
-      } catch (error: any) {
-        if (error?.code === UNIQUE_VIOLATION_CODE) {
+      } catch (error: unknown) {
+        if ((error as { code?: string }).code === UNIQUE_VIOLATION_CODE) {
           throw new ConflictException(
             'This role is already assigned to the user',
           );
@@ -106,8 +106,8 @@ export class UserRolesService {
 
       try {
         return await userRolesRepo.save(userRoles);
-      } catch (error: any) {
-        if (error?.code === UNIQUE_VIOLATION_CODE) {
+      } catch (error: unknown) {
+        if ((error as { code?: string }).code === UNIQUE_VIOLATION_CODE) {
           throw new ConflictException(
             'One or more roles are already assigned to this user',
           );

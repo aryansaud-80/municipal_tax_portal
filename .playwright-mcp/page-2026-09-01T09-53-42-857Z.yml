@@ -1,0 +1,39 @@
+- generic [active] [ref=f1e1]:
+  - button "Open Next.js Dev Tools" [ref=f1e82] [cursor=pointer]:
+    - generic [ref=f1e85]:
+      - text: Compiling
+      - generic [ref=f1e86]:
+        - generic [ref=f1e87]: .
+        - generic [ref=f1e88]: .
+        - generic [ref=f1e89]: .
+  - alert [ref=f1e51]
+  - generic [ref=f1e54]:
+    - generic [ref=f1e55]:
+      - heading "Welcome back" [level=1] [ref=f1e59]
+      - paragraph [ref=f1e60]: Sign in to your citizen account
+    - generic [ref=f1e61]:
+      - generic [ref=f1e62]:
+        - generic [ref=f1e63]: Sign in
+        - generic [ref=f1e64]: Enter your credentials to continue
+      - generic [ref=f1e65]:
+        - generic [ref=f1e66]: Account created successfully. Please sign in.
+        - generic [ref=f1e67]:
+          - generic [ref=f1e68]:
+            - generic [ref=f1e69]: Email
+            - textbox "Email" [ref=f1e70]:
+              - /placeholder: you@example.com
+              - text: pwtest4101@example.com
+          - generic [ref=f1e71]:
+            - generic [ref=f1e72]: Password
+            - textbox "Password" [ref=f1e74]:
+              - /placeholder: ••••••••
+              - text: Citizen123!
+          - button "Sign in" [ref=f1e75]
+        - paragraph [ref=f1e76]:
+          - text: Don't have an account?
+          - link "Register" [ref=f1e77] [cursor=pointer]:
+            - /url: /register
+        - generic [ref=f1e78]:
+          - paragraph [ref=f1e79]: Demo citizen
+          - paragraph [ref=f1e80]: "Email: ram@example.com"
+          - paragraph [ref=f1e81]: "Password: Citizen123!"

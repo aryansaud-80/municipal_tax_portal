@@ -10,6 +10,7 @@ import { ROLES_KEY } from '../constants/authorization.constants';
 import { IS_PUBLIC_KEY } from '../../modules/auth/constants/auth.constants';
 import { PermissionsCheckerService } from '../services/permission-checker.service';
 import { AuthenticatedUser } from '../../modules/auth/interfaces/authenticated-user.interface';
+import { Request } from 'express';
 
 @Injectable()
 export class RolesGuard implements CanActivate {
@@ -37,7 +38,9 @@ export class RolesGuard implements CanActivate {
       return true;
     }
 
-    const request = context.switchToHttp().getRequest();
+    const request = context
+      .switchToHttp()
+      .getRequest<Request & { user?: AuthenticatedUser }>();
     const user: AuthenticatedUser | undefined = request.user;
 
     if (!user) {
@@ -45,8 +48,7 @@ export class RolesGuard implements CanActivate {
     }
 
     const userRoles =
-      user.roles ??
-      (await this.permissionsChecker.getUserRoleNames(user.id));
+      user.roles ?? (await this.permissionsChecker.getUserRoleNames(user.id));
 
     const hasRole = requiredRoles.some((role) => userRoles.includes(role));
 

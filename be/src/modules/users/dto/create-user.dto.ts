@@ -1,6 +1,7 @@
 import {
   IsEmail,
   IsEnum,
+  IsOptional,
   IsString,
   Matches,
   MaxLength,
@@ -45,5 +46,11 @@ export class CreateUserDto {
   phoneNumber!: string;
 
   @IsEnum(UserStatusEnum)
-  status!: UserStatusEnum;
+  @IsOptional()
+  status?: UserStatusEnum;
+
+  @IsOptional()
+  @IsString()
+  @MaxLength(50)
+  roleCode?: string;
 }

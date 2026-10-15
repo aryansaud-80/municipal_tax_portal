@@ -34,4 +34,4 @@ API Prefix  : /api
 ──────────────────────────────────────────
 Application started successfully.`);
 }
-bootstrap();
+void bootstrap();

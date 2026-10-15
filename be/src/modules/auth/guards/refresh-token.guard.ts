@@ -7,6 +7,7 @@ import {
 import { JwtService } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
 import { JwtPayload } from '../interfaces/jwt-payload.interface';
+import type { Request } from 'express';
 
 @Injectable()
 export class RefreshTokenGuard implements CanActivate {
@@ -16,8 +17,14 @@ export class RefreshTokenGuard implements CanActivate {
   ) {}
 
   async canActivate(context: ExecutionContext): Promise<boolean> {
-    const request = context.switchToHttp().getRequest();
-    const refreshToken: string | undefined = request.body?.refreshToken;
+    const request = context.switchToHttp().getRequest<
+      Request & {
+        refreshTokenPayload?: JwtPayload;
+        rawRefreshToken?: string;
+      }
+    >();
+    const body = request.body as { refreshToken?: string } | undefined;
+    const refreshToken: string | undefined = body?.refreshToken;
 
     if (!refreshToken) {
       throw new UnauthorizedException('Refresh token is required');

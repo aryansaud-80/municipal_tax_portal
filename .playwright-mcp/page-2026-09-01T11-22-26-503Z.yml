@@ -1,0 +1,31 @@
+- generic [active] [ref=f15e1]:
+  - generic [ref=f15e2]:
+    - complementary [ref=f15e3]:
+      - generic [ref=f15e4]:
+        - generic [ref=f15e9]:
+          - paragraph [ref=f15e10]: Municipal Tax
+          - paragraph [ref=f15e11]: Admin Portal
+        - navigation [ref=f15e12]:
+          - button "Dashboard" [ref=f15e13]
+          - button "Users" [ref=f15e20]
+          - button "Properties" [ref=f15e27]
+          - button "Tax Assessments" [ref=f15e33]
+          - button "Payments" [ref=f15e37]
+          - button "Receipts" [ref=f15e42]
+          - button "Tax Categories" [ref=f15e47]
+          - button "Reports" [ref=f15e53]
+        - button "Log out" [ref=f15e58]
+    - generic [ref=f15e63]:
+      - banner [ref=f15e64]:
+        - generic [ref=f15e65]:
+          - generic [ref=f15e66]:
+            - paragraph [ref=f15e67]: Admin
+            - paragraph
+          - button "Profile" [ref=f15e68]: A
+      - main [ref=f15e69]:
+        - generic [ref=f15e70]:
+          - generic [ref=f15e72]:
+            - heading "Receipts" [level=1] [ref=f15e73]
+            - paragraph [ref=f15e74]: Official receipts issued for verified payments.
+          - paragraph [ref=f15e77]: Loading receipts...
+  - button "Open Next.js Dev Tools" [ref=f15e83] [cursor=pointer]

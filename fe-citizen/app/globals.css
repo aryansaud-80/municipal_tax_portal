@@ -1,26 +1,168 @@
 @import "tailwindcss";
+@import "tw-animate-css";
+@import "shadcn/tailwind.css";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
+@custom-variant dark (&:is(.dark *));
+
+/* Font stack: Inter primary, Noto Sans Devanagari fallback (next/font vars). */
+@theme {
+  --font-sans: var(--font-inter), var(--font-devanagari), ui-sans-serif,
+    system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-mono: ui-monospace, SFMono-Regular, Menlo, monospace;
 }
 
+/* Design-system color mapping (Tailwind v4 CSS-first config). */
 @theme inline {
   --color-background: var(--background);
+  --color-surface: var(--surface);
+  --color-border: var(--border);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-primary-soft: var(--primary-soft);
+  --color-success: var(--success);
+  --color-warning: var(--warning);
+  --color-danger: var(--danger);
+  --color-destructive: var(--danger);
+  --color-card: var(--surface);
+  --color-card-foreground: var(--foreground);
+  --color-popover: var(--surface);
+  --color-popover-foreground: var(--foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-input: var(--border);
+  --color-ring: var(--primary);
+  --radius-sm: 8px;
+  --radius-md: 10px;
+  --radius-lg: 10px;
+  --radius-xl: 14px;
+  --radius-2xl: 16px;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+:root {
+  --background: #f8fafc;
+  --surface: #ffffff;
+  --border: #e2e8f0;
+  --foreground: #0f172a;
+  --muted: #f1f5f9;
+  --muted-foreground: #64748b;
+  --primary: #1d4ed8;
+  --primary-foreground: #ffffff;
+  --primary-soft: #eff4ff;
+  --success: #16a34a;
+  --warning: #d97706;
+  --danger: #dc2626;
+  --secondary: #f1f5f9;
+  --secondary-foreground: #0f172a;
+  --accent: #eff4ff;
+  --accent-foreground: #0f172a;
+  --radius: 0.625rem;
+  color-scheme: light;
+}
+
+.dark {
+  --background: #0b1220;
+  --surface: #111a2c;
+  --border: #1f2a44;
+  --foreground: #e5e7eb;
+  --muted: #16213a;
+  --muted-foreground: #94a3b8;
+  --primary: #3b82f6;
+  --primary-foreground: #ffffff;
+  --primary-soft: #14213d;
+  --success: #22c55e;
+  --warning: #f59e0b;
+  --danger: #ef4444;
+  --secondary: #1e2a45;
+  --secondary-foreground: #e5e7eb;
+  --accent: #16213a;
+  --accent-foreground: #e5e7eb;
+  color-scheme: dark;
+}
+
+/* Tabular numerals for amounts, IDs, numeric table columns. */
+@utility tnum {
+  font-variant-numeric: tabular-nums;
+}
+
+/* Thin, subtle scrollbar for the single page-scroll container + nav lists. */
+@utility scrollbar-slim {
+  scrollbar-width: thin;
+  scrollbar-color: var(--border) transparent;
+  &::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+  &::-webkit-scrollbar-thumb {
+    background: var(--border);
+    border-radius: 999px;
+  }
+  &::-webkit-scrollbar-track {
+    background: transparent;
   }
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+/* Page content entrance: fade + rise max 8px, 180ms ease-out. */
+@keyframes page-in {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@utility animate-page-in {
+  animation: page-in 180ms ease-out both;
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background font-sans text-foreground antialiased;
+  }
+  :focus-visible {
+    outline: 2px solid var(--primary);
+    outline-offset: 2px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* Clean printable bills and receipts for the municipal office. */
+@media print {
+  aside,
+  header,
+  nav,
+  .no-print {
+    display: none !important;
+  }
+  main {
+    padding: 0 !important;
+    overflow: visible !important;
+  }
+  body {
+    background: #fff;
+  }
+  .print-block {
+    border: 1px solid #333;
+    border-radius: 0;
+    box-shadow: none;
+  }
 }
