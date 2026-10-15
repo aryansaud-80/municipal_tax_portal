@@ -237,7 +237,7 @@ Critical flows (registration → verification → billing → payment → receip
 ## Environment variables
 
 Backend (`be/.env`, see `be/.env.example`): `PORT`, `DB_HOST/PORT/USERNAME/PASSWORD/NAME`, `JWT_ACCESS_SECRET`, `JWT_ACCESS_EXPIRES_IN`, `JWT_REFRESH_SECRET`, `JWT_REFRESH_EXPIRES_IN`, `SUPER_ADMIN_*` seed, `BCRYPT_SALT_ROUNDS`, `MOCK_PAY_SECRET` (HMAC for the test provider — set a strong random value), `DOCUMENT_STORAGE_PATH` (default `./uploads/documents`, gitignored, served only via authorized endpoints), `CORS_ORIGIN` (comma-separated exact frontend origins, e.g. `https://municipal-tax-fe-admin.onrender.com,https://municipal-tax-fe-citizen.onrender.com`; unset = same-origin only).
-Frontends (build-time `NEXT_PUBLIC_API_URL`, dev `.env.local`, see each `fe-*/.env.example`): `NEXT_PUBLIC_API_URL` (default `http://localhost:8000`, WITHOUT trailing `/api`; `API_URL` kept as fallback). Production example: `NEXT_PUBLIC_API_URL=https://municipal-tax-be.onrender.com`.
+Frontends (build-time `NEXT_PUBLIC_API_URL`, dev `.env.local`, see each `fe-*/.env.example`): `NEXT_PUBLIC_API_URL` (default `http://localhost:8000`, WITHOUT trailing `/api`; `API_URL` kept as fallback). Production example: `NEXT_PUBLIC_API_URL=https://municipal-tax-portal.onrender.com`.
 
 ## Known limitations & future work
 
