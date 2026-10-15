@@ -16,9 +16,20 @@ async function bootstrap() {
 
   app.useGlobalPipes(AppValidationPipe);
 
+  // CORS allowlist comes from CORS_ORIGIN (comma-separated exact origins,
+  // e.g. "https://municipal-tax-admin.onrender.com,https://municipal-tax-citizen.onrender.com").
+  // `credentials: true` forbids the "*" wildcard, so never fall back to it:
+  // unset/empty means same-origin only (fail closed in production).
+  const corsOrigins = (process.env.CORS_ORIGIN ?? "")
+    .split(",")
+    .map((origin) => origin.trim())
+    .filter((origin) => origin.length > 0 && origin !== "*");
+
   app.enableCors({
-    origin: process.env.CORS_ORIGIN?.split(',') ?? '*',
+    origin: corsOrigins.length > 0 ? corsOrigins : false,
     credentials: true,
+    methods: ["GET", "POST", "PATCH", "PUT", "DELETE", "OPTIONS"],
+    allowedHeaders: ["Content-Type", "Authorization", "Accept"],
   });
 
   app.setGlobalPrefix('api');

@@ -31,8 +31,8 @@ export function useLogout() {
 
   return useMutation({
     mutationFn: logoutRequest,
-    // Logout is a session boundary: the BFF has already revoked the
-    // server token and cleared cookies, so leave via a full reload to
+    // Logout is a session boundary: the refresh token has been revoked
+    // server-side and local tokens cleared, so leave via a full reload to
     // guarantee no authenticated state survives client-side.
     onSuccess: () => {
       queryClient.clear();
@@ -69,7 +69,7 @@ export function useChangePassword() {
 
 /**
  * Extracts a display-ready message from an Axios error shaped by our
- * GlobalExceptionFilter on the NestJS side, forwarded as-is by the BFF.
+ * GlobalExceptionFilter on the NestJS side.
  */
 export function getLoginErrorMessage(error: unknown): string {
   if (error && typeof error === "object" && "response" in error) {

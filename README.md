@@ -65,7 +65,7 @@ municipal-tax-portal/
 ```
 
 - The backend returns every response wrapped as `{ success, message, data, timestamp }`.
-- Frontends use a **BFF pattern**: client components call Next.js route handlers (`/api/...`), which forward to NestJS with the HTTP-only `access_token` cookie attached. Tokens never touch client JavaScript.
+- Frontends are **static-exported** (`output: "export"` in each `next.config.ts`) for Render Static Sites: there is no Next.js server at runtime, so the browser calls NestJS directly via the shared axios client (`lib/axios.ts`, base `${NEXT_PUBLIC_API_URL}/api`) with `Authorization: Bearer` JWTs kept in Web Storage (`lib/token-storage.ts`) plus a 401-triggered `POST /auth/refresh` rotation. A client-side `AuthGuard` replaces the old edge middleware for route protection.
 - Auth: JWT access (15 min) + rotating refresh tokens (7 days), 5-strike temporary lockout, role/permission guards on every restricted route.
 
 ## Project structure
@@ -88,11 +88,10 @@ be/src/
 
 fe-citizen / fe-admin
 ├── app/(auth)/      login (+ citizen self-registration)
-├── app/(portal)/    role-scoped pages
-├── app/api/         BFF route handlers proxying NestJS
-├── features/        per-domain API clients + React Query hooks
+├── app/(portal)/    role-scoped pages (guarded by components/auth/AuthGuard)
+├── features/        per-domain API clients + React Query hooks (direct NestJS calls)
 ├── components/      shared + shadcn UI primitives
-└── lib/             axios client, BFF helpers, NPR formatting
+└── lib/             axios client, token storage, env, NPR formatting
 ```
 
 ## Prerequisites
@@ -136,9 +135,20 @@ pnpm dev                    # http://localhost:3002
 
 ```bash
 cd be && pnpm build && pnpm start:prod
-cd fe-citizen && pnpm build && pnpm start
-cd fe-admin && pnpm build && pnpm start
+cd fe-citizen && pnpm build   # static export → fe-citizen/out (no `pnpm start`; deploy `out/`)
+cd fe-admin && pnpm build      # static export → fe-admin/out (no `pnpm start`; deploy `out/`)
 ```
+
+### Render deployment (Static Sites)
+
+Each frontend is its own Render **Static Site** (the NestJS backend is a separate Web Service):
+
+| Site | Root Directory | Build Command | Publish Directory |
+| ---- | -------------- | ------------- | ----------------- |
+| `municipal-tax-admin` | `fe-admin` | `pnpm install --frozen-lockfile && pnpm build` | `out` |
+| `municipal-tax-citizen` | `fe-citizen` | `pnpm install --frozen-lockfile && pnpm build` | `out` |
+
+Alternative with the repository root as Root Directory: Build Command `pnpm --dir fe-admin install --frozen-lockfile && pnpm --dir fe-admin build` (or `fe-citizen`), Publish Directory `fe-admin/out` (or `fe-citizen/out`). Set `NEXT_PUBLIC_API_URL` at build time — it is embedded into the static bundle, so changing it later requires a rebuild. There is intentionally no root `pnpm-workspace.yaml`; each package installs from its own lockfile.
 
 ## Demo credentials
 
@@ -226,8 +236,8 @@ Critical flows (registration → verification → billing → payment → receip
 
 ## Environment variables
 
-Backend (`be/.env`, see `be/.env.example`): `PORT`, `DB_HOST/PORT/USERNAME/PASSWORD/NAME`, `JWT_ACCESS_SECRET`, `JWT_ACCESS_EXPIRES_IN`, `JWT_REFRESH_SECRET`, `JWT_REFRESH_EXPIRES_IN`, `SUPER_ADMIN_*` seed, `BCRYPT_SALT_ROUNDS`, `MOCK_PAY_SECRET` (HMAC for the test provider — set a strong random value), `DOCUMENT_STORAGE_PATH` (default `./uploads/documents`, gitignored, served only via authorized endpoints).
-Frontends (`.env.local`): `API_URL` (default `http://localhost:8000`).
+Backend (`be/.env`, see `be/.env.example`): `PORT`, `DB_HOST/PORT/USERNAME/PASSWORD/NAME`, `JWT_ACCESS_SECRET`, `JWT_ACCESS_EXPIRES_IN`, `JWT_REFRESH_SECRET`, `JWT_REFRESH_EXPIRES_IN`, `SUPER_ADMIN_*` seed, `BCRYPT_SALT_ROUNDS`, `MOCK_PAY_SECRET` (HMAC for the test provider — set a strong random value), `DOCUMENT_STORAGE_PATH` (default `./uploads/documents`, gitignored, served only via authorized endpoints), `CORS_ORIGIN` (comma-separated exact frontend origins, e.g. `https://municipal-tax-admin.onrender.com,https://municipal-tax-citizen.onrender.com`; unset = same-origin only).
+Frontends (build-time `NEXT_PUBLIC_API_URL`, dev `.env.local`, see each `fe-*/.env.example`): `NEXT_PUBLIC_API_URL` (default `http://localhost:8000`, WITHOUT trailing `/api`; `API_URL` kept as fallback). Production example: `NEXT_PUBLIC_API_URL=https://municipal-tax-be.onrender.com`.
 
 ## Known limitations & future work
 

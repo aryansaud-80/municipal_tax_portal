@@ -48,8 +48,8 @@ export function useLogout() {
 
   return useMutation({
     mutationFn: logoutRequest,
-    // Logout is a session boundary: the BFF has already revoked the
-    // server token and cleared cookies, so leave via a full reload to
+    // Logout is a session boundary: the refresh token has been revoked
+    // server-side and local tokens cleared, so leave via a full reload to
     // guarantee no authenticated state survives client-side.
     onSuccess: () => {
       queryClient.clear();

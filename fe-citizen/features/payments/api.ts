@@ -8,8 +8,14 @@ export interface CreatePaymentPayload {
 }
 
 export async function getMyPayments(): Promise<Paginated<Payment>> {
+  // The backend has no `/payments` shorthand without a user scope; resolve
+  // the current user via the profile endpoint first (same as the old BFF).
+  const { data: profile } = await apiClient.post("/auth/profile", {});
+  const userId: string | null = profile?.data?.id ?? null;
+  if (!userId) throw new Error("Not authenticated");
   const { data } = await apiClient.get<ApiResponse<Paginated<Payment>>>(
     "/payments",
+    { params: { userId, limit: 50 } },
   );
   return data.data;
 }

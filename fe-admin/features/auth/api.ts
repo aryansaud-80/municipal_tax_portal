@@ -1,15 +1,45 @@
 import { apiClient } from "@/lib/axios";
+import { clearTokens, getRefreshToken, setTokens } from "@/lib/token-storage";
 import { LoginRequest, LoginResponse, AuthenticatedUserDto } from "./types";
+
+interface BackendLoginPayload {
+  accessToken: string;
+  refreshToken: string;
+  expiresIn: string;
+  user: AuthenticatedUserDto;
+  roles: string[];
+  permissions: string[];
+}
 
 export async function loginRequest(
   payload: LoginRequest,
 ): Promise<LoginResponse> {
-  const { data } = await apiClient.post<LoginResponse>("/auth/login", payload);
-  return data;
+  // The backend DTO only accepts email/password (forbidNonWhitelisted), so
+  // rememberMe is applied client-side to token persistence only.
+  const { data } = await apiClient.post<{ data: BackendLoginPayload }>(
+    "/auth/login",
+    { email: payload.email, password: payload.password },
+  );
+  const { accessToken, refreshToken, expiresIn, user, roles, permissions } =
+    data.data;
+  setTokens({
+    accessToken,
+    refreshToken,
+    persistent: payload.rememberMe ?? true,
+  });
+  return { user, roles, permissions, expiresIn };
 }
 
 export async function logoutRequest(): Promise<void> {
-  await apiClient.post("/auth/logout");
+  const refreshToken = getRefreshToken();
+  if (refreshToken) {
+    try {
+      await apiClient.post("/auth/logout", { refreshToken });
+    } catch {
+      /* still log out locally even if the backend is unreachable */
+    }
+  }
+  clearTokens();
 }
 
 export interface ChangePasswordPayload {
@@ -29,9 +59,9 @@ export async function changePasswordRequest(
 
 export async function meRequest(): Promise<AuthenticatedUserDto | null> {
   try {
-    const { data } = await apiClient.get<{
+    const { data } = await apiClient.post<{
       data: AuthenticatedUserDto | null;
-    }>("/auth/me");
+    }>("/auth/profile", {});
     return data.data;
   } catch {
     return null;
