@@ -1,13 +1,13 @@
 import { NextRequest, NextResponse } from "next/server";
+import { API_URL } from "@/lib/env";
 
-const NESTJS_API_URL = process.env.NESTJS_API_URL ?? "http://localhost:8000";
 const ACCESS_COOKIE = "access_token";
 const REFRESH_COOKIE = "refresh_token";
 
 export async function POST(request: NextRequest) {
   const body = await request.json();
 
-  const upstreamResponse = await fetch(`${NESTJS_API_URL}/api/auth/login`, {
+  const upstreamResponse = await fetch(`${API_URL}/api/auth/login`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ email: body.email, password: body.password }),

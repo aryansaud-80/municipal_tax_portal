@@ -1,10 +1,10 @@
 import { NextRequest } from "next/server";
+import { API_URL } from "./env";
 
-const NESTJS_API_URL = process.env.NESTJS_API_URL ?? "http://localhost:8000";
 const ACCESS_COOKIE = "access_token";
 
 export function nestUrl(path: string): string {
-  return `${NESTJS_API_URL}/api${path}`;
+  return `${API_URL}/api${path}`;
 }
 
 export function authHeaders(request: NextRequest): Headers {
